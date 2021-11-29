@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 #include"Mouse.h"
 
 typedef struct MineSweeper {
@@ -31,8 +32,6 @@ char** generate(int x, int y, int mine) {
 				for (int ty = -1; ty < 2; ty++) {
 					if (rx + tx >= 0 && rx + tx < x && ry + ty >= 0 && ry + ty < y && res[rx + tx][ry + ty] != 'm') {
 						res[rx + tx][ry + ty]++;
-					} else {
-						continue;
 					}
 				}
 			}
@@ -45,5 +44,25 @@ void print(int x,int y,char** data) {
 	for (int i = 0; i < x; i++) {
 		for (int j = 0; j < y; j++) printf("%c", data[i][j]);
 		printf("\n");
+	}
+}
+
+void gameover() {
+
+}
+
+int select(int x, int y, MineSweeper* data) {
+	if (data->map[x][y] == 'm') gameover();
+	else {
+		bool isMine = false;
+		for (int tx = -1; tx < 2; tx++) for (int ty = -1; ty < 2; ty++) {
+			if (0<=x+tx && x+tx<data->x || 0<=y+ty || y+ty<data->y) {
+				if (data->map[x + tx][y + ty] == 'm') isMine = true;
+				if(data->player[x + tx][y + ty] == 'n') data->player[x + tx][y + ty] = data->map[x + tx][y + ty];
+			}
+		}
+		if (!isMine) for (int tx = -1; tx < 2; tx++) for (int ty = -1; ty < 2; ty++) {
+			
+		}
 	}
 }
