@@ -6,10 +6,13 @@
 typedef struct MineSweeper {
 	int x;
 	int y;
-	int stat; //0 : game over, 1 : running, 2 : win
+	int mine;
+	int status; //0 : game over, 1 : running, 2 : win
 	char** player;
 	char** map;
 } MineSweeper;
+
+//int select(int x, int y, MineSweeper* data);
 
 char** empty(int x, int y) {
 	char** res = (char**)malloc(sizeof(char*) * x);
@@ -47,22 +50,25 @@ void print(int x,int y,char** data) {
 	}
 }
 
-void gameover() {
-
+void gameover(MineSweeper* data) {
+	gotoxy(data->x + 1, 0);
+	printf("Game Over!");
+	data->status = 0;
 }
 
-int select(int x, int y, MineSweeper* data) {
-	if (data->map[x][y] == 'm') gameover();
-	else {
-		bool isMine = false;
-		for (int tx = -1; tx < 2; tx++) for (int ty = -1; ty < 2; ty++) {
-			if (0<=x+tx && x+tx<data->x || 0<=y+ty || y+ty<data->y) {
-				if (data->map[x + tx][y + ty] == 'm') isMine = true;
-				if(data->player[x + tx][y + ty] == 'n') data->player[x + tx][y + ty] = data->map[x + tx][y + ty];
-			}
+void select_mine(int x, int y, MineSweeper* data) {
+	printf("%c", data->map[x][y]);
+	data->player[x][y] = data->map[x][y];
+	if (data->map[x][y] == 'm') {
+		gameover(data);
+	} else {
+		int isMine = 0;
+		gotoxy(0, 0);
+		for (int tx = -1; tx < 2; tx+=2) for (int ty = -1; ty < 2; ty+=2) {
+			printf("tx : %d, ty : %d\n", tx, ty);
 		}
-		if (!isMine) for (int tx = -1; tx < 2; tx++) for (int ty = -1; ty < 2; ty++) {
-			
+		if (isMine==0) for (int tx = -1; tx < 2; tx+=2) for (int ty = -1; ty < 2; ty+=2) {
+			printf("isMine : 0, tx : %d, ty : %d\n", tx, ty); 
 		}
 	}
 }
