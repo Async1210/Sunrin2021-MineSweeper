@@ -113,6 +113,9 @@ void main() {
     data.cheat = 0;
     srand(time(NULL));
 
+    system("title MineSweeper");
+    system("mode con cols=175 lines=50");
+
     DWORD mode;
     WORD key;
     COORD pos;
@@ -127,22 +130,34 @@ void main() {
     //    x = pos.X, y = pos.Y;
     //}
 
-    printf("                                           지뢰찾기 레벨을 선택해주세요. \n");
-    printf("                                             ┌──────┬────────┬──────┐ \n");
-    printf("                                             │ Easy │ Normal │ Hard │ \n");
-    printf("                                             └──────┴────────┴──────┘ \n");
-    printf("                        클릭이 안된다면 설정 - 속성에서 '빠른 편집 모드'와 '삽입모드'를 꺼주세요. \n");
+    restart:
+    clear(0, 150);
+
+    data.x = data.y = data.dif = data.mine = data.cheat = -1;
+
+    gotoxy(71, 17);
+    printf("지뢰찾기 레벨을 선택해주세요.");
+    gotoxy(73, 18);
+    printf("┌──────┬────────┬──────┐");
+    gotoxy(73, 19);
+    printf("│ Easy │ Normal │ Hard │");
+    gotoxy(73, 20);
+    printf("└──────┴────────┴──────┘");
+    gotoxy(52, 21);
+    printf("클릭이 안된다면 설정 - 속성에서 '빠른 편집 모드'와 '삽입모드'를 꺼주세요.");
+    gotoxy(0, 0);
 
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
         MOUSE_EVENT;
         x = pos.X, y = pos.Y;
+        //printf("x : %d, y : %d\n", x, y);
         if (x == 0 && y == 0) {
             gotoxy(0, 0);
             data.cheat = 1;
             printf("Wow! You Fount Cheat!");
-        } else if (46 <= x && x <= 68 && 1 <= y && y <= 3) {
-            if (46 <= x && x <= 52) data.dif = 1;
-            else if (53 <= x && x <= 61) data.dif = 2;
+        } else if (74 <= x && x <= 96 && 18 <= y && y <= 20) {
+            if (74 <= x && x <= 80) data.dif = 1;
+            else if (81 <= x && x <= 89) data.dif = 2;
             else data.dif = 3;
             data.x = data.dif == 1 ? 9 : data.dif == 2 ? 16 : 30;
             data.y = data.dif == 1 ? 9 : 16;
@@ -172,13 +187,15 @@ void main() {
     for (int i = 0; i < data.y; i++) data.player[i] = (int*)malloc(sizeof(int) * data.x);
     for (int i = 0; i < data.y; i++) for (int j = 0; j < data.x; j++) data.player[i][j] = -1;
 
-    clear(0, 20);
+    clear(0, 150);
+
     show_map(data.player, data.x, data.y);
     printf("블럭을 클릭해주세요."); 
     if (data.cheat == 1) { //Show MineSweeper Map
         gotoxy(0, data.y + 2);
         show_map(data.map, data.x, data.y);
     }
+
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
         MOUSE_EVENT;
         x = pos.X, y = pos.Y;
@@ -189,21 +206,48 @@ void main() {
                 clear(0, data.y + 2);
                 show_map(data.player, data.x, data.y);
                 printf("블럭을 클릭해주세요.");
+                if (data.cheat == 1) { //Show MineSweeper Map
+                    gotoxy(0, data.y + 2);
+                    show_map(data.map, data.x, data.y);
+                }
             } else if (res == -1) { // Game Over
-                gotoxy(0, 0);
+                clear(0, data.y * 3);
+                printf("        Game Over!");
+                gotoxy(0, 5);
                 show_map(data.player, data.x, data.y);
-                clear(data.y, 2);
-                gotoxy(0, data.y);
-                printf("Game Over!");
+                if (data.cheat == 1) { //Show MineSweeper Map
+                    gotoxy(0, data.y + 7);
+                    show_map(data.map, data.x, data.y);
+                }
                 break;
             } else { // Success
-                gotoxy(0, 0);
+                clear(0, data.y*3);
+                printf("         Sucess!");
+                gotoxy(0, 5);
                 show_map(data.player, data.x, data.y);
-                clear(data.y, 2);
-                gotoxy(0, data.y);
-                printf("Success!");
+                if (data.cheat == 1) { //Show MineSweeper Map
+                    gotoxy(0, data.y + 7);
+                    show_map(data.map, data.x, data.y);
+                }
                 break;
             }
+        }
+    }
+
+    gotoxy(0, 1);
+    printf("다시 플레이 하시겠습니까? \n");
+    printf("    ┌───────┬──────┐ \n");
+    printf("    │  Yes  │  No  │ \n");
+    printf("    └───────┴──────┘ \n");
+    gotoxy(0,0);
+
+    while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
+        MOUSE_EVENT;
+        x = pos.X, y = pos.Y;
+        //printf("x : %d, y : %d\n", x, y);
+        if (5 <= x && x <= 19 && 2 <= y && y <= 4) {
+            if (5 <= x && x <= 12) goto restart;
+            else break;
         }
     }
 
