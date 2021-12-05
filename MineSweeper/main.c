@@ -145,8 +145,8 @@ void main() {
     printf("└──────┴────────┴──────┘");
     gotoxy(10, 19);
     printf("클릭이 안된다면 리본 메뉴에서 우클릭을 하고");
-    gotoxy(7, 20);
-    printf("속성에서 '빠른 편집 모드'와 '삽입모드'를 꺼주세요.");
+    gotoxy(6, 20);
+    printf("속성에서 '빠른 편집 모드'와 '삽입 모드'를 꺼주세요.");
     gotoxy(0, 0);
 
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
