@@ -11,6 +11,7 @@ typedef struct {
     int y;
     int mine;
     int dif;
+    int cheat;
     int status; // -1 : game over, 0 : playing, 1 : success
     int** player;
     int** map;
@@ -109,6 +110,7 @@ int select_map(int x, int y, MineSweeper *data) {
 void main() {
 
     MineSweeper data;
+    data.cheat = 0;
     srand(time(NULL));
 
     DWORD mode;
@@ -134,7 +136,11 @@ void main() {
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
         MOUSE_EVENT;
         x = pos.X, y = pos.Y;
-        if (46 <= x && x <= 68 && 1 <= y && y <= 3) {
+        if (x == 0 && y == 0) {
+            gotoxy(0, 0);
+            data.cheat = 1;
+            printf("Wow! You Fount Cheat!");
+        } else if (46 <= x && x <= 68 && 1 <= y && y <= 3) {
             if (46 <= x && x <= 52) data.dif = 1;
             else if (53 <= x && x <= 61) data.dif = 2;
             else data.dif = 3;
@@ -168,14 +174,16 @@ void main() {
 
     clear(0, 20);
     show_map(data.player, data.x, data.y);
-    printf("블럭을 클릭해주세요.");
-    //gotoxy(0, data.y + 5);
-    //show_map(data.map, data.x, data.y);
+    printf("블럭을 클릭해주세요."); 
+    if (data.cheat == 1) { //Show MineSweeper Map
+        gotoxy(0, data.y + 2);
+        show_map(data.map, data.x, data.y);
+    }
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
         MOUSE_EVENT;
         x = pos.X, y = pos.Y;
         if (0 <= x && x < data.x*2 && 0 <= y && y < data.y) {
-        x = (x + 1) % 2 == 0 ? (x + 1) / 2 - 1 : (x + 1) / 2;
+            x = (x + 1) % 2 == 0 ? (x + 1) / 2 - 1 : (x + 1) / 2;
             int res = select_map(x, y, &data);
             if (res == 0) {
                 clear(0, data.y + 2);
@@ -185,12 +193,14 @@ void main() {
                 gotoxy(0, 0);
                 show_map(data.player, data.x, data.y);
                 clear(data.y, 2);
+                gotoxy(0, data.y);
                 printf("Game Over!");
                 break;
             } else { // Success
                 gotoxy(0, 0);
                 show_map(data.player, data.x, data.y);
                 clear(data.y, 2);
+                gotoxy(0, data.y);
                 printf("Success!");
                 break;
             }
