@@ -114,7 +114,7 @@ void main() {
     srand(time(NULL));
 
     system("title MineSweeper");
-    system("mode con cols=175 lines=50");
+    system("mode con cols=62 lines=35");
 
     DWORD mode;
     WORD key;
@@ -135,16 +135,18 @@ void main() {
 
     data.x = data.y = data.dif = data.mine = data.cheat = -1;
 
-    gotoxy(71, 17);
+    gotoxy(17, 13);
     printf("지뢰찾기 레벨을 선택해주세요.");
-    gotoxy(73, 18);
+    gotoxy(19, 14);
     printf("┌──────┬────────┬──────┐");
-    gotoxy(73, 19);
+    gotoxy(19, 15);
     printf("│ Easy │ Normal │ Hard │");
-    gotoxy(73, 20);
+    gotoxy(19, 16);
     printf("└──────┴────────┴──────┘");
-    gotoxy(52, 21);
-    printf("클릭이 안된다면 설정 - 속성에서 '빠른 편집 모드'와 '삽입모드'를 꺼주세요.");
+    gotoxy(10, 17);
+    printf("클릭이 안된다면 리본 메뉴에서 우클릭을 하고");
+    gotoxy(7, 18);
+    printf("속성에서 '빠른 편집 모드'와 '삽입모드'를 꺼주세요.");
     gotoxy(0, 0);
 
     while(1) if(be_input()) if(get_input(&key, &pos) != 0) {
@@ -155,9 +157,9 @@ void main() {
             gotoxy(0, 0);
             data.cheat = 1;
             printf("Wow! You Fount Cheat!");
-        } else if (74 <= x && x <= 96 && 18 <= y && y <= 20) {
-            if (74 <= x && x <= 80) data.dif = 1;
-            else if (81 <= x && x <= 89) data.dif = 2;
+        } else if (20 <= x && x <= 42 && 14 <= y && y <= 16) {
+            if (20 <= x && x <= 26) data.dif = 1;
+            else if (27 <= x && x <= 35) data.dif = 2;
             else data.dif = 3;
             data.x = data.dif == 1 ? 9 : data.dif == 2 ? 16 : 30;
             data.y = data.dif == 1 ? 9 : 16;
